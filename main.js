@@ -1,6 +1,6 @@
 import "./style.css";
 
-import gsap from 'gsap';
+import gsap from "gsap";
 import * as THREE from "three";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
@@ -21,7 +21,7 @@ const scene = new THREE.Scene();
 
 let donut = null;
 const gltfLoader = new GLTFLoader();
-gltfLoader.load("./assets/donut/scene.gltf", (gltf) => {
+gltfLoader.load("/first_portfolio2/assets/donut/scene.gltf", (gltf) => {
   donut = gltf.scene;
 
   // Donut Rotation
@@ -49,64 +49,59 @@ scene.add(directionalLight);
 /**
  * Scroll
  */
-let scrollY = window.scrollY
-let currentSection = 0
+let scrollY = window.scrollY;
+let currentSection = 0;
 
-const transformDonut = [{
-        rotationZ: 0.45,
-        positionX: 1.5
-    },
-    {
-        rotationZ: -0.45,
-        positionX: -1.5
-    },
-    {
-        rotationZ: 0.0314,
-        positionX: 0
-    },
-    {
-        rotationZ: 0.0314,
-        positionX: 0
-    },
-]
+const transformDonut = [
+  {
+    rotationZ: 0.45,
+    positionX: 1.5,
+  },
+  {
+    rotationZ: -0.45,
+    positionX: -1.5,
+  },
+  {
+    rotationZ: 0.0314,
+    positionX: 0,
+  },
+  {
+    rotationZ: 0.0314,
+    positionX: 0,
+  },
+];
 
-window.addEventListener('scroll', () => {
+window.addEventListener("scroll", () => {
+  scrollY = window.scrollY;
+  const newSection = Math.round(scrollY / sizes.height);
 
-    scrollY = window.scrollY
-    const newSection = Math.round(scrollY / sizes.height)
+  console.log(newSection);
 
-    console.log(newSection);
+  if (newSection != currentSection) {
+    currentSection = newSection;
 
-    if (newSection != currentSection) {
-        currentSection = newSection
+    if (!!donut) {
+      gsap.to(donut.rotation, {
+        duration: 1.5,
+        ease: "power2.inOut",
+        z: transformDonut[currentSection].rotationZ,
+      });
+      gsap.to(donut.position, {
+        duration: 1.5,
+        ease: "power2.inOut",
+        x: transformDonut[currentSection].positionX,
+      });
 
-        if (!!donut) {
-            gsap.to(
-                donut.rotation, {
-                    duration: 1.5,
-                    ease: 'power2.inOut',
-                    z: transformDonut[currentSection].rotationZ
-                }
-            )
-            gsap.to(
-                donut.position, {
-                    duration: 1.5,
-                    ease: 'power2.inOut',
-                    x: transformDonut[currentSection].positionX
-                }
-            )
-
-            // gsap.to(
-            //     sphereShadow.position, {
-            //         duration: 1.5,
-            //         ease: 'power2.inOut',
-            //         x: transformDonut[currentSection].positionX - 0.2
-            //     }
-            // )
-        }
+      // gsap.to(
+      //     sphereShadow.position, {
+      //         duration: 1.5,
+      //         ease: 'power2.inOut',
+      //         x: transformDonut[currentSection].positionX - 0.2
+      //     }
+      // )
     }
-})
-
+  }
+});
 
 /**
  * Sizes
